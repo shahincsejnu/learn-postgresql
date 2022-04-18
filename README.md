@@ -1,8 +1,25 @@
 # learn-postgresql
 
 ## Basics
+- This section contains:
+  - Install `PostgreSQL` in `ubuntu 20.04 lts`
+  - Configure PostgreSQL (setup password etc.)
+  - Access PostgreSQL
+  - Create User and Work with Multiple PostgreSQL users
+  - Sign-In with specific user
+  - Demo to check users permissions
+  - Uninstall PostgreSQL in Ubuntu 20.04 lts
+  - `PostgreSQL` vs `pgAdmin`
+  - Install pgAdmin
+  - pgAdmin modes
+  - Demo of `pgAdmin` modes  
+  
+**Note:** Click on `Click to see more` to see all the part of this section
 
-### Install PostgreSQL in Ubuntu 20.04 lts
+<details>
+<summary>Click to see more</summary>
+
+### 1. Install PostgreSQL in Ubuntu 20.04 lts
 - `sudo apt-get update`
 - `sudo apt install postgresql postgresql-contrib`
 
@@ -18,7 +35,7 @@
       - after logged in successfully let's list the Databases we have:
         - `\l` : it will show List of existing databases
         
-### Access PostgreSQL 
+### 2. Access PostgreSQL 
 To access the PostgreSQL we have two options:
 
 #### Option-1:
@@ -31,7 +48,7 @@ To access the PostgreSQL we have two options:
 - `sudo -u postgres psql` : to get logged in and also start the postgres command line or interface
 - `\q` : to quit the postgres command line or interface and also it gets out directly to the local terminal
 
-### Create a User
+### 3. Create a User
 `sudo -u postgres psql` : at first always get logged in and go to the pg command line
 
 #### See/Work in Current User : Multiple PostgreSQL users
@@ -55,7 +72,7 @@ To access the PostgreSQL we have two options:
 
 **Note:** So far, we have installed PostgreSQL in ubuntu 20.04, and we've also created multiple users in our PG, the super user is postgres which came with the installation and then we created another lesser privilege user is sahadat. The privileges you can have depends on the user with which you are connecting to the postgres.
 
-### Sign-in with a user : Demo to check the permissions
+### 4. Sign-in with a user : Demo to check the permissions
 #### Option-1:
 - `sudo -u sahadat psql` : to get logged in and start the command line interface for user `sahadat`
 - `\conninfo` : to see which db and as which user connected currently
@@ -90,11 +107,11 @@ To access the PostgreSQL we have two options:
   - tell whether new user role be a superuser, give y
 - a user/role is created 
 
-### Create a new Database
+### 5. Create a new Database
 - `sudo -u postgres createdb sahadatdb` : run this from local terminal, it will create a db named `sahadatdb`
 
 
-### Uninstall PostgreSQL in Ubuntu 20.04 lts
+### 6. Uninstall PostgreSQL in Ubuntu 20.04 lts
 - `sudo apt-get --purge remove postgresql`
 - `dpkg -l | grep postgres` : List all postgres related packages
 - `sudo apt-get --purge remove package1 package2 ..` : remove all the above listed packages using the command
@@ -106,13 +123,13 @@ To access the PostgreSQL we have two options:
   - Delete the user postgres using the command:
     - `sudo userdel -f postgres`
 
-### PostgreSQL vs pgAdmin
+### 7. PostgreSQL vs pgAdmin
 `pgAdmin` is the most popular and feature rich Open Source administration tool for PostgreSQL. Installing pgAdmin is optional but recommended. You can try an online demo of pgAdmin4 [here](https://www.pgadmin.org/try/).
 
 - The PostgreSQL is a database engine implementing SQL standards. It usually listen as a server on a network tcp port to provide its abilities. 
 - The pgAdmin is a sort of client. You are able to manipulate schema and data on an instance or multiple instances of PostgreSQL engines.
 
-### Install pgAdmin4:
+### 8. Install pgAdmin4:
 Now, we'll see how to install pgAdmin4 in ubuntu 20.04 lts and how to use it to manage our PostgreSQL server
 
 #### Add pg
@@ -133,9 +150,34 @@ Now, we'll see how to install pgAdmin4 in ubuntu 20.04 lts and how to use it to 
 ##### Combination of both mode
 - To install both:
   - `sudo apt install pgadmin4`
+  
+### 9. Demo of pgAdmin4 desktop mode
+- To open pgAdmin4 in desktop mode, search pgAdmin4 and open it in your pc
+- a prompt will come and set a password (for ex: `pgAdmin`) to it, it's not related to psql so set any password that you want
+- then click on `Add New Server` to connect your postgresql server
+- we can add local pg server (in General info) --> then in connection give `localhost` and put everything default (port: 5432, maintenance db: postgres, username: postgres, password: give your password for the user that you set locally (for ex: `root@123`), save password) --> save it
+- Now we added out local pg in pgAdmin, so you can see our postgresql db users and dbs and respective infos by clicking on the `Local PG` or the name that we provided during adding server to pgAdmin
+- This is how we connect/use pgAdmin4 in desktop mode
 
-### Demo of pgAdmin4 desktop mode
+### 10. Demo of pgAdmin4 web mode
+- First need to configure it, to configure web mode, run the command below and this is required only one time after the installation:
+  - open terminal and run `sudo /usr/pgadmin4/bin/setup-web.sh`
+  - need to give a email and set a pass, with these email and pass you will login in pgAdmin in web mode
+  - accept all the following things by giving `y`
+  - now see at the end of the successful message of this command in terminal, you will see a local address is given and by that url you can pgAdmin in browser/web mode
+- you won't see any server that you added in desktop mode in this web mode, you have to do it again
 
 
+> Now you connect to any of the db and do the operations accordingly
+
+> So we have seen the whole process of postgresql and pgAdmin in ubuntu 20.04 lts
+
+</details>
+
+# Resources
+- [x] [Install PostgreSQL and pgAdmin on Ubuntu 20.04](https://www.youtube.com/watch?v=lX9uMCSqqko)
+- [ ] [PostgreSQL Tutorial](https://www.postgresqltutorial.com/)
+- [ ] [Learn PostgreSQL Tutorial - Full Course for Beginners](https://www.youtube.com/watch?v=qw--VYLpxG4)
+- [ ] [PostgreSQL Tutorial For Beginners | Learn PostgreSQL](https://www.youtube.com/watch?v=-VO7YjQeG6Y)
 
 
