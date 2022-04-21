@@ -1,6 +1,6 @@
 # learn-postgresql
 
-## Basics
+# Basics
 - This section contains:
   - Install `PostgreSQL` in `ubuntu 20.04 lts`
   - Configure PostgreSQL (setup password etc.)
@@ -19,11 +19,11 @@
 <details>
 <summary>Click to see more</summary>
 
-### 1. Install PostgreSQL in Ubuntu 20.04 lts
+## 1. Install PostgreSQL in Ubuntu 20.04 lts
 - `sudo apt-get update`
 - `sudo apt install postgresql postgresql-contrib`
 
-#### Configure PostgreSQL 
+### Configure PostgreSQL 
 - Just after the installation for our first time use configure it (set root user and root password to access PostgreSQL) by below steps:  
   - `sudo -u postgres psql`
   - `ALTER USER postgres PASSWORD 'root@123';` : to reset the password
@@ -35,23 +35,23 @@
       - after logged in successfully let's list the Databases we have:
         - `\l` : it will show List of existing databases
         
-### 2. Access PostgreSQL 
+## 2. Access PostgreSQL 
 To access the PostgreSQL we have two options:
 
-#### Option-1:
+### Option-1:
 - `sudo -i -u postgres` : to use/logged in as a postgres user
 - `psql` : to start/access the postgres command line or interface
 - `\q` : to quit the postgres command line or interface
 - `exit` : to logout
 
-#### Option-2:
+### Option-2:
 - `sudo -u postgres psql` : to get logged in and also start the postgres command line or interface
 - `\q` : to quit the postgres command line or interface and also it gets out directly to the local terminal
 
-### 3. Create a User
+## 3. Create a User
 `sudo -u postgres psql` : at first always get logged in and go to the pg command line
 
-#### See/Work in Current User : Multiple PostgreSQL users
+### See/Work in Current User : Multiple PostgreSQL users
 - `\conninfo` : to see currently on which DB and as a which user connected
 - `\du` : to see current set of users, this list the users and roles they have, role name column is shows the users basically
 - `CREATE USER sahadat WITH CREATEDB LOGIN ENCRYPTED PASSWORD 'admin';` : create another user/role name here, can grant superuser or other type of user as well as, here login
@@ -72,23 +72,23 @@ To access the PostgreSQL we have two options:
 
 **Note:** So far, we have installed PostgreSQL in ubuntu 20.04, and we've also created multiple users in our PG, the super user is postgres which came with the installation and then we created another lesser privilege user is sahadat. The privileges you can have depends on the user with which you are connecting to the postgres.
 
-### 4. Sign-in with a user : Demo to check the permissions
-#### Option-1:
+## 4. Sign-in with a user : Demo to check the permissions
+### Option-1:
 - `sudo -u sahadat psql` : to get logged in and start the command line interface for user `sahadat`
 - `\conninfo` : to see which db and as which user connected currently
 
-#### Option-2:
+### Option-2:
 - `psql -U postgres -h localhost` : to connect to the psql with the super user postgres, we can use any user in the place of `postgres` user and will get privileges accordingly
 - `\conninfo` : current db info
 
-#### Demo to check the permissions
-##### With superuser postgres
+### Demo to check the permissions
+#### With superuser postgres
 - connect with superuser `postgres` by `psql -U postgres -h localhost`
 - `\l` : list of dbs
 - `CREATE DATABASE testdb2;` : create a db
 - `DROP DATABASE testdb2;` :  we can drop the databse `testdb2` to check whether we have drop permissions for this user
 
-##### With user `sahadat`
+#### With user `sahadat`
 - connect with user `sahadat` from the local terminal run `psql -U sahadat -h localhost` ; Note: set the password for this user to run this command, otherwise use sign-in with a user option-1
 - `\l` : here also can list the databases as this user have this permission
 - `CREATE DATABASE testuserdb;` : we can also create a db with this user
@@ -101,17 +101,17 @@ To access the PostgreSQL we have two options:
 
 - Now, we see a demo of user role in PostgreSQL
 
-#### Create new user
+### Create new user
 - `sudo -u postgres createuser --interactive`
   - give the name of role (user name) to add, for example `sahadat`
   - tell whether new user role be a superuser, give y
 - a user/role is created 
 
-### 5. Create a new Database
+## 5. Create a new Database
 - `sudo -u postgres createdb sahadatdb` : run this from local terminal, it will create a db named `sahadatdb`
 
 
-### 6. Uninstall PostgreSQL in Ubuntu 20.04 lts
+## 6. Uninstall PostgreSQL in Ubuntu 20.04 lts
 - `sudo apt-get --purge remove postgresql`
 - `dpkg -l | grep postgres` : List all postgres related packages
 - `sudo apt-get --purge remove package1 package2 ..` : remove all the above listed packages using the command
@@ -123,35 +123,35 @@ To access the PostgreSQL we have two options:
   - Delete the user postgres using the command:
     - `sudo userdel -f postgres`
 
-### 7. PostgreSQL vs pgAdmin
+## 7. PostgreSQL vs pgAdmin
 `pgAdmin` is the most popular and feature rich Open Source administration tool for PostgreSQL. Installing pgAdmin is optional but recommended. You can try an online demo of pgAdmin4 [here](https://www.pgadmin.org/try/).
 
 - The PostgreSQL is a database engine implementing SQL standards. It usually listen as a server on a network tcp port to provide its abilities. 
 - The pgAdmin is a sort of client. You are able to manipulate schema and data on an instance or multiple instances of PostgreSQL engines.
 
-### 8. Install pgAdmin4:
+## 8. Install pgAdmin4:
 Now, we'll see how to install pgAdmin4 in ubuntu 20.04 lts and how to use it to manage our PostgreSQL server
 
-#### Add pg
+### Add pg
 - Add the pgAdmin4 repository : Create the repository configuration file by: 
   - `curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add`
   - `sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'`
 
-#### pgAdmin4 can be installed in two modes:
-##### Mode-1: Desktop mode
+### pgAdmin4 can be installed in two modes:
+#### Mode-1: Desktop mode
 - To install desktop mode:
   - `sudo apt install pgadmin4-desktop`
 
-##### Mode-2: Web mode
+#### Mode-2: Web mode
 - To install web mode:
   - `sudo apt install pgadmin4-web`
 - 
 
-##### Combination of both mode
+#### Combination of both mode
 - To install both:
   - `sudo apt install pgadmin4`
   
-### 9. Demo of pgAdmin4 desktop mode
+## 9. Demo of pgAdmin4 desktop mode
 - To open pgAdmin4 in desktop mode, search pgAdmin4 and open it in your pc
 - a prompt will come and set a password (for ex: `pgAdmin`) to it, it's not related to psql so set any password that you want
 - then click on `Add New Server` to connect your postgresql server
@@ -159,7 +159,7 @@ Now, we'll see how to install pgAdmin4 in ubuntu 20.04 lts and how to use it to 
 - Now we added out local pg in pgAdmin, so you can see our postgresql db users and dbs and respective infos by clicking on the `Local PG` or the name that we provided during adding server to pgAdmin
 - This is how we connect/use pgAdmin4 in desktop mode
 
-### 10. Demo of pgAdmin4 web mode
+## 10. Demo of pgAdmin4 web mode
 - First need to configure it, to configure web mode, run the command below and this is required only one time after the installation:
   - open terminal and run `sudo /usr/pgadmin4/bin/setup-web.sh`
   - need to give a email and set a pass, with these email and pass you will login in pgAdmin in web mode
@@ -172,12 +172,398 @@ Now, we'll see how to install pgAdmin4 in ubuntu 20.04 lts and how to use it to 
 
 > So we have seen the whole process of postgresql and pgAdmin in ubuntu 20.04 lts
 
-</details>
-
-# Resources
+## Resources
 - [x] [Install PostgreSQL and pgAdmin on Ubuntu 20.04](https://www.youtube.com/watch?v=lX9uMCSqqko)
 - [ ] [PostgreSQL Tutorial](https://www.postgresqltutorial.com/)
 - [ ] [Learn PostgreSQL Tutorial - Full Course for Beginners](https://www.youtube.com/watch?v=qw--VYLpxG4)
 - [ ] [PostgreSQL Tutorial For Beginners | Learn PostgreSQL](https://www.youtube.com/watch?v=-VO7YjQeG6Y)
 
+</details>
+
+# Concepts Notes
+- PostgreSQL is an advanced, enterprise class open source relational database that supports both SQL (relational) and JSON (non-relational) querying.
+
+## PostgreSQL : Architectural Fundamentals
+- see official [doc](https://www.postgresql.org/docs/current/tutorial-arch.html)
+
+## PostgreSQL Server and Client
+- A server process, which manages the database files, accepts connections to the database from client applications, and performs database actions on behalf of the clients. The database server program is called postgres . The user's client (frontend) application that wants to perform database operations.
+- 
+
+## PostgreSQL Clusters
+- PostgreSQL groups databases into `clusters`, each of which is a consists of collection of databases and share a configuration and data location, and run on a single server instance with its own `TCP` port.
+- If you only want a single instance of PostgreSQL, the installation includes a cluster named `main`, so you don't need to run `initdb` or `pg_createcluster` command to create one.
+- If you need multiple clusters, then the Postgres packages for Debian and Ubuntu provide a command `pg_createcluster` to be used.
+- And if you just wanna create a database, not a database cluster then use `createdb` command only.
+- 
+
+# Tutorials
+This section contains tutorials of PostgreSQL
+
+## Official [tutorial](postgresqltutorial.com)
+- This section contains the official PostgreSQL tutorial, step by step are:
+  - Getting Started with PostgreSQL
+    - Install PostgreSQL, Access/Connect to PostgreSQL and Load sample DB in PostgreSQL on Linux
+  - PostgreSQL quick start
+    - What is PostgreSQL
+    - PostgreSQL Sample Database
+    - Connect to PostgreSQL Database
+    - Load PostgreSQL sample database
+  - PostgreSQL Fundamentals : SQL queries
+    - Querying Data
+    - Filtering Data
+    - Joining Multiple Tables
+    - Grouping Data
+    - Set Operations
+    - Grouping sets, Cube, and Rollup
+    - Subquery
+    - Common Table Expressions
+    - Modifying Data
+    - Transactions
+    - Import & Export Data
+    - Managing Tables
+    - Understanding PostgreSQL Constraints
+    - PostgreSQL Data Types in Depth
+    - Conditional Expressions & Operators
+    - PostgreSQL Utilities
+    - PostgreSQL Recipes
+
+**Note:** Click on `Click to see more` for seeing all the subsections of this section
+
+<details>
+<summary>Click to see more</summary>
+
+### 1. Getting Started with PostgreSQL 
+- This section helps you get started with PostgreSQL by showing you how to install PostgreSQL on Windows, Linux, and macOS. You also learn how to connect to PostgreSQL using the psql tool as well as how to load a sample database into the PostgreSQL for practicing.
+  - follow this [doc](https://www.postgresqltutorial.com/postgresql-getting-started/)
+#### Install PostgreSQL, Access/Connect to PostgreSQL and Load sample DB in PostgreSQL on Linux 
+- follow this [doc](https://www.postgresqltutorial.com/postgresql-getting-started/install-postgresql-linux/)
+- switch to a database by `\c <db_name>`
+- use the `pg_restore` tool to [restore](https://www.postgresqltutorial.com/postgresql-restore-database/) any database:
+  - `pg_restore --dbname=<db_name> --verbose <sample.tar>`
+
+### 2. PostgreSQL quick start
+#### What is PostgreSQL
+- follow this [doc](https://www.postgresqltutorial.com/postgresql-getting-started/what-is-postgresql/)
+
+#### PostgreSQL Sample Database
+- follow [this](https://www.postgresqltutorial.com/postgresql-getting-started/postgresql-sample-database/)
+
+#### Connect to PostgreSQL Database
+- follow [this](https://www.postgresqltutorial.com/postgresql-getting-started/connect-to-postgresql-database/)
+
+#### Load PostgreSQL sample database
+- follow [this](https://www.postgresqltutorial.com/postgresql-getting-started/load-postgresql-sample-database/)
+
+### 3. PostgreSQL Fundamentals : SQL queries
+- First, we’ll learn how to query data from a single table using basic data querying techniques, including selecting data, sorting result sets, and filtering rows. 
+- Then, we’ll learn about advanced queries such as joining multiple tables, using set operations, and constructing the subquery. Finally, we will learn how to manage database tables, such as creating a new table or modifying an existing table’s structure.
+
+#### Querying Data
+- `SELECT`:
+  - follow [this]()
+  - show you how to query data from a single table.
+- `COLUMN ALIASES`:
+  - follow [this]()
+  - 
+- `ORDER BY`:
+  - follow [this]()
+  - 
+- `SELECT DISTINCT`:
+  - follow [this]()
+  - 
+
+#### Filtering Data
+- `WHERE`:
+  - follow [this]()
+  - 
+- `LIMIT`:
+  - follow [this]()
+  - 
+- `FETCH`:
+  - follow [this]()
+  - 
+- `IN`:
+  - follow [this]()
+  - 
+- `BETWEEN`:
+  - follow [this]()
+  - 
+- `LIKE`:
+  - follow [this]()
+  - 
+- `IS NULL`:
+  - follow [this]()
+  - 
+
+#### Joining Multiple Tables
+- `Table Aliases`:
+  - follow [this]()
+  - 
+- `Joins`:
+  - follow [this]()
+  - 
+- `INNER JOIN`:
+  - follow [this]()
+  - 
+- `LEFT JOIN`:
+  - follow [this]()
+  - 
+- `RIGHT JOIN`:
+  - follow [this]()
+  - 
+- `SELF-JOIN`:
+  - follow [this]()
+  - 
+- `FULL OUTER JOIN`:
+  - follow [this]()
+  - 
+- `Cross Join`:
+  - follow [this]()
+- `Natural Join`:
+  - follow [this]()
+  - 
+
+#### Grouping Data
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+
+#### Set Operations
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+
+#### Grouping sets, Cube, and Rollup
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+
+#### Subquery
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+
+#### Common Table Expressions
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+
+#### Modifying Data
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+
+#### Transactions
+- ``:
+  - follow [this]()
+  - 
+
+#### Import & Export Data
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+
+#### Managing Tables
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+
+#### Understanding PostgreSQL Constraints
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+
+#### PostgreSQL Data Types in Depth
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+
+#### Conditional Expressions & Operators
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+- ``:
+  - follow [this]()
+  - 
+
+#### PostgreSQL Utilities
+- `psql commands`:
+  - follow [this]()
+  - 
+
+#### PostgreSQL Recipes
+- `How to compare two tables`:
+  - follow [this]()
+  - 
+- `How to delete duplicate rows in PostgreSQL`:
+  - follow [this]()
+  - 
+- `How to generate a random number in a range`:
+  - follow [this]()
+  - 
+- `EXPLAIN statement`:
+  - follow [this]()
+  - 
+- `PostgreSQL vs. MySQL `:
+  - follow [this](https://www.postgresqltutorial.com/postgresql-tutorial/postgresql-vs-mysql/)
+  - compare PostgreSQL with MySQL in terms of functionalities.
+
+</details>
+
+
+# Advanced Stuffs
+- This section contains:
+  - Pgpool-II
+
+<details>
+<summary>Click to see more</summary>
+
+## Pgpool-II
+- It's a PostgreSQL opensource extension
+- with Pgpool we can build highly available system that can continue to operate even a failure
+
+
+</details>
 
