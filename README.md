@@ -568,9 +568,163 @@ In this section, you will start exploring the PostgreSQL data types and show you
 <details>
 <summary>Click to see more</summary>
 
+## PostgreSQL Connection Pooling Series
+- [x] [Part-1 : Pros & Cons](https://scalegrid.io/blog/postgresql-connection-pooling-part-1-pros-and-cons/)
+  - Notes:
+    - PostgreSQL developers decided forking a process for each connection to the database is the safest choice. 
+    - Each client having its own process prevents a poorly behaving client from crashing the entire database.
+    - On modern Linux systems, the difference in overhead between forking a process and creating a thread is much lesser than it used to be.
+    - Moving to a multithreaded architecture will require extensive rewrites.
+    - 
+- [x] [Part-2 : PgBouncer](https://scalegrid.io/blog/postgresql-connection-pooling-part-2-pgbouncer/)
+  - Notes:
+    - When it comes to connection pooling in the PostgreSQL world, PgBouncer is probably the most popular option.
+    - A client connects to PgBouncer with the exact same syntax it would use when connecting directly to PostgreSQL – PgBouncer is essentially invisible.
+    - it sits between the database and the clients and speaks the PostgreSQL protocol, emulating a PostgreSQL server.
+    - PgBouncer, while a great connection pooler, does not support automated load balancing or high-availability. It recommends using other common linux tools like HAProxy to create an architecture which does support these features.
+    - 
+- [x] [Part-3 : Pgpool-II](https://scalegrid.io/blog/postgresql-connection-pooling-part-3-pgpool-ii/)
+  - Notes:
+    - Pgpool-II is the most popular alternative of PgBouncer
+    - Pgpool-II is the swiss army knife of PostgreSQL middleware. It supports high-availability, provides automated load balancing, and has the intelligence to balance load between masters and slaves so write loads are always directed at masters, while read loads are directed to slaves.
+    - Pgpool-II also provides logical replication. While its use and importance has decreased as the inbuilt replication options improved on PostgreSQL server side, this still remains a valuable option for older versions of PostgreSQL. 
+    - On top of all this, it also provides connection pooling!
+    - 
+- [x] [Part-4 : PgBouncer vs. Pgpool-II](https://scalegrid.io/blog/postgresql-connection-pooling-part-4-pgbouncer-vs-pgpool/)
+
+
 ## Pgpool-II
 - It's a PostgreSQL opensource extension
 - with Pgpool we can build highly available system that can continue to operate even a failure
+**Note:** We must follow the Pgpool-II respective versions doc that we're going to install. For ex: if we want to install `4.3.1` then we need to follow the `pgpool-II 4.3.1 Documentation`
+> Pgpool all versions [docs list](https://www.pgpool.net/docs/pgpool-II-3.0/tutorial-en.html)
+> Pgpool-II version 4.3.1 complete [doc & tutorial & etc all](https://www.pgpool.net/docs/pgpool-II-4.3.1/en/html/)
+
+### Pgpool-II installation : messed up one
+> Avoid this section, just follow the below one, as I messed up it when installing pgpool-II, basically we need to follow the respective pgpool-II version doc, here I messed up with 4.3.1 version with 3.7.5 version's doc.
+
+<details>
+<summary>Click to see more</summary>
+
+#### [Setting up Pgpool-II](https://scalegrid.io/blog/postgresql-connection-pooling-part-3-pgpool-ii/#1)
+- Pgpool-II binaries are distributed through Pgpool-II’s repositories – for installation follow this [help doc](https://www.pgpool.net/docs/pgpool-II-3.7.5/en/html/installation.html)
+- Once installed, we must configure Pgpool-II to enable the services we want, and connect to the PostgreSQL server. You can read more about it [here](https://www.pgpool.net/docs/pgpool-II-3.7.5/en/html/configuring-pcp-conf.html)
+- To get a minimal pooling setup up, you must provide the following:
+  - The username and md5 encrypted password of the user(s) who’ll connect to Pgpool-II – this must be defined in a separate file, which can be easily generated using the pg_md5 util.
+  - Interfaces/IP-addresses and port number to listen to for incoming connections – this must be defined in the configuration file.
+  - The hostname of the backend server(s) [More than one server is specified only if we wish to use replication and/or load balancing].
+  - The services you wish to enable. By default, connection pooling is on, and other services are off in the configuration file installed with the binaries.
+#### steps that I did for Pgpool-II installation
+- Environment:
+  - ubuntu 20.04 lts
+- Commands, follow [this](https://www.pgpool.net/docs/pgpool-II-3.7.5/en/html/install-pgpool.html):
+  - `make --version`
+  - `gcc --version`
+  - downloaded `pgpool-II-4.3.1.tar.gz` from [here](https://www.pgpool.net/mediawiki/index.php/Downloads)
+  - extract this tar file by `tar xf pgpool-II-4.3.1.tar.gz`
+  - open terminal and go to the extracted pgpool-II directory by `cd pgpool-II-4.3.1/`
+  - After extracting the source tarball, execute the configure script by `./configure`
+    - running this script shows an error at that "configure: error: libpq is not installed or libpq is old"
+    - so, I installted libpq-dev by:
+      - `sudo apt-get update`
+      - `sudo apt-get install libpq-dev`
+    - then again run the `./configure` command and now it works fine.
+  - Pgpool-II binaries will be built with PAM authentication support. PAM authentication support is disabled by dafault.
+    - ran `make`
+    - then `make install`
+      - it shows some error, then I again ran first `sudo make` and then `sudo make install`
+      - works fine
+  - This will install Pgpool-II. (If you use Solaris or FreeBSD, replace make with gmake)
+  - After installing, now I ran `pgpool`, it shows:
+    - ```
+      2022-04-27 09:25:01.407: main pid 169026: WARNING:  could not open configuration file: "/usr/local/etc/pgpool.conf"
+      2022-04-27 09:25:01.407: main pid 169026: DETAIL:  using default configuration parameter values
+      2022-04-27 09:25:01.408: main pid 169027: FATAL:  could not open pid file "/var/run/pgpool/pgpool.pid"
+      2022-04-27 09:25:01.408: main pid 169027: DETAIL:  No such file or directory
+      ```
+    - because,  Once installed, we must configure Pgpool-II to enable the services we want, and connect to the PostgreSQL server.
+    - for this we need to follow [this doc](https://www.pgpool.net/docs/pgpool-II-3.7.5/en/html/configuring-pcp-conf.html)
+  - Configuring pcp.conf:
+    - Pgpool-II provides a interface for administrators to perform management operation, such as getting Pgpool-II status or terminating Pgpool-II processes remotely. pcp.conf is the user/password file used for authentication by this interface. All operation modes require the pcp.conf file to be set. A $prefix/etc/pcp.conf.sample file is created during the installation of Pgpool-II. Copy the file as $prefix/etc/pcp.conf and add your user name and password to it.
+    - here $prefix == `/usr/local`
+    - `cd /usr/local/etc`
+    - `sudo cp pcp.conf.sample pcp.conf`
+    - now need to give username and password in this pcp.conf file, used for authentication by this interface
+    - add your user name and password to it
+    - `nano pcp.conf` if permission denied then use `sudo nano pcp.conf`
+    - An empty line or a line starting with # is treated as a comment and will be ignored. A user name and its associated password must be written as one line using the following format:
+      - `username:[md5 encrypted password]` : Note that users defined here do not need to be PostgreSQL users. These users are authorized ONLY for pgpool communication manager.
+      - [md5 encrypted password] can be produced with the /bin/pg_md5 command.
+        - `cd /bin/`
+        - `pg_md5 <your_password>`
+        - you will get a md5 encrypted password, copy it and then paste the above nano pcp.conf file
+  - Configuring pgpool.conf:
+    - Now need to configure pgpool.conf, follow [this](https://www.pgpool.net/docs/pgpool-II-3.7.5/en/html/configuring-pgpool.html) doc:
+    - `pgpool.conf` is the main configuration file of Pgpool-II. You need to specify the path to the file when starting Pgpool-II using `-f` option. `pgpool.conf` is located at `/etc/pgpool.conf` by default.  
+    - `sudo cp pgpool.conf.sample pgpool.conf` run from `/usr/local/etc` directory
+  - Now by running `pgpool` command got:
+    - ```
+      2022-04-27 10:23:39.844: main pid 201165: FATAL:  could not open pid file "/var/run/pgpool/pgpool.pid"
+      2022-04-27 10:23:39.844: main pid 201165: DETAIL:  No such file or directory
+      ```
+    - now, create `/var/run/pgpool` directory and give write rights to the user pgpool runs as.
+      - `sudo chmod 777 /var/run/pgpool`
+      - make sure `sudo service postgresql start`
+      - now if run `pgpool`, it shows no error
+
+##### Simply installation
+> It seems can be install pgpool-II by below command only:
+```
+sudo apt-get update
+sudo apt-get install pgpool2
+```
+
+- For configurations:
+```
+cd /etc/pgpool2/
+```
+
+- change the access permissions to edit configuration file or login as a user. (prefered to login as a user), by:
+```
+chmod 666 pgpool.conf
+code pgpool.conf
+code pcp.conf
+code pool_hba.conf
+```
+- to uninstall `sudo apt-get remove pgpool2` and follow [this](https://howtoinstall.co/en/pgpool?action=uninstall)
+
+#### [Running mode of Pgpool-II](https://www.pgpool.net/docs/pgpool-II-3.7.5/en/html/configuring-pgpool.html)
+- There are four different running modes in Pgpool-II: streaming replication mode, logical replication mode, master slave mode (slony mode), native replication mode and raw mode. 
+- In any mode, Pgpool-II provides connection pooling, automatic fail over and online recovery.
+- The sample configuration files for each mode are provied. They are located under `/usr/local/etc`. You can copy one of them to `/usr/local/etc/pgpool.conf`
+- Those modes are exclusive each other and cannot be changed after starting the server. You should make a decision which to use in the early stage of designing the system. If you are not sure, it is recommended to use the streaming replication mode.
+> to know more details about the modes see the above link.
+
+</details>
+
+
+## Pgpool-II : version 4.3.1
+> follow Official Complete Documentation of 4.3.1 [this doc](https://www.pgpool.net/docs/pgpool-II-4.3.1/en/html/)
+- below in this section basically will go through this doc fully with taking notes and dong hands-on
+
+### Preface
+> follow this [doc](https://www.pgpool.net/docs/pgpool-II-4.3.1/en/html/preface.html)
+
+
+### Tutorial
+> follow this [doc](https://www.pgpool.net/docs/pgpool-II-4.3.1/en/html/tutorial.html)
+
+
+### Server Administration
+> follow this [doc](https://www.pgpool.net/docs/pgpool-II-4.3.1/en/html/admin.html)
+
+
+### Examples : Configurations Examples
+> follow this [doc](https://www.pgpool.net/docs/pgpool-II-4.3.1/en/html/examples.html)
+
+
+### Reference Information for the Pgpool-II
+> follow this [doc](https://www.pgpool.net/docs/pgpool-II-4.3.1/en/html/reference.html)
 
 
 </details>
