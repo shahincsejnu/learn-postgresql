@@ -560,6 +560,15 @@ In this section, you will start exploring the PostgreSQL data types and show you
 
 </details>
 
+# Issues & Fix
+- **Issue-1:** Internal Server Error: Crypt key is missing
+  - Summary:
+    - when tried to connect to local DB by pgAdmin4 gui faced this issue
+  - Reason:
+    - when opened pgAdmin4 gui first time didn't give/set a master password (ex: `root@123`) that's why happened this issue
+  - Fix:
+    - when open pgAdmin4 gui first set/give master password
+
 
 # Advanced Stuffs
 - This section contains:
@@ -710,9 +719,28 @@ code pool_hba.conf
 ### Preface
 > follow this [doc](https://www.pgpool.net/docs/pgpool-II-4.3.1/en/html/preface.html)
 
+- Pgpool-II manages a pool of PostgreSQL servers to achieve some features that are not available with single PostgreSQL installation. The features include:
+  - High Availability
+  - Load balancing
+  - Connection Pooling
+  - Online Recovery
+  - Limiting Exceeding Connections
+  - Watchdog
+  - In Memory Query Cache
+  - 
 
 ### Tutorial
 > follow this [doc](https://www.pgpool.net/docs/pgpool-II-4.3.1/en/html/tutorial.html)
+
+#### Temporary Installation
+- `pgpool_setup` : [doc](https://www.pgpool.net/docs/pgpool-II-4.3.1/en/html/pgpool-setup.html)
+- `pgpool_setup` creates a temporary installation of Pgpool-II cluster, which includes a Pgpool-II installation and specified number of PostgreSQL installations under current directory. Current directory must be empty before running `pgpool_setup`.
+- `mkdir pgpool_setup_test`
+- `cd pgpool_setup_test`
+- `pgpool_setup`
+
+#### First Replication
+
 
 
 ### Server Administration
@@ -725,6 +753,11 @@ code pool_hba.conf
 
 ### Reference Information for the Pgpool-II
 > follow this [doc](https://www.pgpool.net/docs/pgpool-II-4.3.1/en/html/reference.html)
+
+
+### Pgpool-II on Kubernetes
+> follow this [doc](https://www.pgpool.net/docs/pgpool-II-4.3.1/en/html/example-kubernetes.html)
+
 
 
 </details>
